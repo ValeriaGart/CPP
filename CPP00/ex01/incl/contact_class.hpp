@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include <limits>
+#include <string>
 
 class Contact {
 
@@ -17,6 +18,7 @@ private:
 
 	std::string	_ft_get_string(std::string str);
 	void		_ft_put_cut_value(std::string str, std::string cut_str);
+	int			_is_ascii(const std::string& s);
 
 public:
 

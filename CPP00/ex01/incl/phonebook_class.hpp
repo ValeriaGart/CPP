@@ -8,6 +8,7 @@ class PhoneBook {
 private:
 	Contact _contacts[8];
 	int		_num_of_contacts;
+	int		_index;
 
 	int		_ft_get_index(void);
 

@@ -10,6 +10,13 @@ Contact::~Contact()
     return ;
 }
 
+int Contact::_is_ascii(const std::string& s) {
+    for (char c : s) {
+        if (static_cast<unsigned char>(c) > 127) return 0;
+    }
+    return 1;
+}
+
 std::string	Contact::_ft_get_string(std::string str)
 {
     std::string input = "";
@@ -19,8 +26,9 @@ std::string	Contact::_ft_get_string(std::string str)
     {
         std::cout << str << std::flush;
         std::getline(std::cin, input);
-        if (std::cin.good() && !input.empty())
+        if (std::cin.good() && !input.empty() && this->_is_ascii(input))
             correct++;
+        else if (std::cin.eof()) return(input);
         else 
         {
             std::cin.clear();
@@ -33,10 +41,15 @@ std::string	Contact::_ft_get_string(std::string str)
 void	Contact::ft_new_contact(int index) {
     this->_index = index;
     this->_first_name = this->_ft_get_string("Enter the first name: ");
+    if (std::cin.eof()) return;
     this->_last_name = this->_ft_get_string("Enter the last name: ");
+    if (std::cin.eof()) return;
     this->_nickname = this->_ft_get_string("Enter the nickname: ");
+    if (std::cin.eof()) return;
     this->_phone_number = this->_ft_get_string("Enter the phone number: ");
+    if (std::cin.eof()) return;
     this->_the_darkest_secret = this->_ft_get_string("Enter the darkest secret: ");
+    if (std::cin.eof()) return;
 }
 
 void	Contact::_ft_put_cut_value(std::string str, std::string cut_str)

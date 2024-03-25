@@ -1,8 +1,8 @@
 #include "./incl/phonebook_class.hpp"
 
-
 PhoneBook::PhoneBook() {
 	this->_num_of_contacts = -1;
+	this->_index = -1;
     return ;
 }
 
@@ -21,10 +21,13 @@ void	PhoneBook::ft_instructions(void) {
 }
 
 void	PhoneBook::ft_add_new_contact(void) {
+	if (this->_index  == 7)
+		this->_index = -1;
 	if (this->_num_of_contacts < 7)
 		this->_num_of_contacts++;
+	this->_index++;
 	std::cin.ignore();
-	this->_contacts[this->_num_of_contacts].ft_new_contact(this->_num_of_contacts);
+	this->_contacts[this->_index].ft_new_contact(this->_num_of_contacts);
 }
 
 int	PhoneBook::_ft_get_index(void)
@@ -35,6 +38,7 @@ int	PhoneBook::_ft_get_index(void)
 		while (!correct) {
 			std::cout << "\nWhat index would you like to check? ^^" << std::endl << "> ";
 			std::cin >> index;
+			if (std::cin.eof()) return -1;
 			if (std::cin.good() && (index >= 0 && index <= this->_num_of_contacts)) {
 				correct++;
 				std::cout << "Here you goooo..." << std::endl;

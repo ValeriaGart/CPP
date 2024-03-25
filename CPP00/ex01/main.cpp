@@ -14,8 +14,10 @@ int main()
 			phone_book.ft_add_new_contact();
 		if (read_line.compare("SEARCH") == 0)
 			phone_book.ft_search_for_contact();
+		if (std::cin.eof()) {return (1);}
 		std::cout << "ʕ•́ᴥ•̀ʔっ\t";
 		std::cin >> read_line;
+		if (std::cin.eof()) {return (1);}
 	}
 	return (0);
 }

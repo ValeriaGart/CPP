@@ -10,18 +10,38 @@ Fixed::Fixed(const Fixed& to_copy) {
 	*this = to_copy;
 }
 
+Fixed::Fixed(const int num) : _fixed_point(num << this->_fractional) {
+	std::cout << "Integer constructor called" << std::endl;
+}
+
+Fixed::Fixed(const float num) : _fixed_point(roundf(num * (float)(1 << this->_fractional))) {
+	std::cout << "Float constructor called" << std::endl;
+}
+
 Fixed::~Fixed( void ) {
 	std::cout << "Destructor called" << std::endl;
 	return ;
 }
 
 Fixed& Fixed::operator=(const Fixed& to_assign) {
-	//copy all values
 	std::cout << "Copy operator called" << std::endl;
 	if (this != &to_assign) {
 		this->_fixed_point = to_assign.getRawBits();
 	}
 	return *this;
+}
+
+std::ostream& operator<<(std::ostream& out, const Fixed& to_print) {
+    out << to_print.toFloat();
+    return out;
+}
+
+float Fixed::toFloat(void) const {
+    return ((float)this->_fixed_point) / (float)(1 << this->_fractional);
+}
+
+int	Fixed::toInt(void) const {
+	return (roundf(this->toFloat()));
 }
 
 int	Fixed::getRawBits( void ) const {

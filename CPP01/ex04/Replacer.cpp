@@ -16,16 +16,16 @@ Replacer::~Replacer( void )
 }
 
 bool	Replacer::replace( void ) {
-	std::ifstream   input(this->_filename);
-	std::string 	line;
+	std::string		line;
+	std::ifstream	input(this->_filename);
 
-    if (!input.is_open()) {
+	if (!input.is_open()) {
 		std::cerr << "Unable to open the file" << std::endl;
-        return (false);
+		return (false);
 	}
-    if (std::getline(input, line, '\0')) {
-		std::ofstream	output(this->_out_filename);
+	if (std::getline(input, line, '\0')) {
 		size_t 			i = line.find(this->_s1);
+		std::ofstream	output(this->_out_filename);
 
 		if (!output.is_open()) {
 			input.close();
@@ -40,7 +40,7 @@ bool	Replacer::replace( void ) {
 		output << line;
 		output.close();
 	}
-    else {
+	else {
     		std::cerr << "Empty file found." << std::endl;
 			return (false);
 	}

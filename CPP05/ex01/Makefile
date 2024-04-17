@@ -1,16 +1,11 @@
-NAME = Polymorphism
+NAME = bureaucrat
 
-SRCS =	main.cpp		\
-		Cat.cpp			\
-		Dog.cpp			\
-		Animal.cpp		\
-		WrongAnimal.cpp	\
-		WrongCat.cpp	\
-		Brain.cpp
+SRCS =	main.cpp	\
+		Bureaucrat.cpp
 
 CC = c++
 
-CFLAGS = -std=c++98 -pedantic -Wextra -Werror -Wall 
+CFLAGS = -std=c++98 -pedantic -Wextra -Werror -Wall
 
 OBJS = $(SRCS:.cpp=.o)
 

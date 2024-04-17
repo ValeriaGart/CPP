@@ -6,7 +6,7 @@ SRCS =	main.cpp		\
 
 CXX = c++
 
-CFLAGS = -Wextra -Werror -Wall -g -std=c++98
+CFLAGS = -Wextra -Werror -Wall -g -std=c++98 -pedantic
 
 OBJS = $(SRCS:.cpp=.o)
 

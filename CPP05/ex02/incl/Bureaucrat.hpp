@@ -4,8 +4,11 @@
 # include <iostream>
 # include <exception>
 # include <string>
+# include "AForm.hpp"
 
-class Bureaucrat{
+class AForm;
+
+class Bureaucrat {
 
 	public:
 		Bureaucrat(Bureaucrat const & to_copy);
@@ -19,6 +22,7 @@ class Bureaucrat{
 		void        incrementGrade();
 		void        decrementGrade();
 		void		signForm(std::string fname, bool ssigned);
+		void		executeForm(AForm const & form);
 		class	GradeTooHighException : public std::exception {
 			public:
 				virtual const char* what() const throw() {

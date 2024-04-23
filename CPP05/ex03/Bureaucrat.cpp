@@ -1,6 +1,7 @@
 #include "./incl/Bureaucrat.hpp"
 
 Bureaucrat::Bureaucrat( const std::string& name, int grade ) : _name(name), _grade(grade) {
+	std::cout << "Bureaucrat constructor for " << name << " called" << std::endl;
 	return ; 
 }
 
@@ -9,15 +10,17 @@ Bureaucrat::Bureaucrat( void ) : _name(NULL), _grade(-1) {
 }
 
 Bureaucrat::Bureaucrat( Bureaucrat const & to_copy) {
+	std::cout << "Bureaucrat copy constructor for " << this->_name << " called" << std::endl;
 	*this = to_copy;
 }
 
 Bureaucrat::~Bureaucrat( void ) {
+	std::cout << "Bureaucrat destructor for " << this->_name << " called" << std::endl;
 	return ;
 }
 
 Bureaucrat & Bureaucrat::operator=(Bureaucrat const & to_assign) {
-	std::cout << " Equality operator is called" << std::endl;
+	std::cout << " Equality operator for " << this->_name << " is called" << std::endl;
 	if (this != &to_assign) {
 		this->_grade = to_assign.getGrade();
     }
@@ -60,7 +63,11 @@ void		Bureaucrat::signForm(std::string fname, bool ssigned) {
 					<< ". Grade too low." << std::endl;
 }
 
-std::ostream&   operator<<( std::ostream& out, const Bureaucrat& bur ) {
-	out << bur.getName() << ", bureaucrat grade " << bur.getGrade();
-	return out;
+void		Bureaucrat::executeForm(Form const & form) {
+	form.execute(*this);
 }
+
+std::ostream&   operator<<( std::ostream& out, const Bureaucrat& bur ) {
+	out << bur.getName() << ", bureaucrat grade " << bur.getGrade() << std::endl;
+	return out;
+}	

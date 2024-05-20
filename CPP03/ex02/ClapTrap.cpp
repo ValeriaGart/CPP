@@ -68,3 +68,7 @@ void 		ClapTrap::beRepaired(unsigned int amount) {
 		std::cout	<< "ClapTrap " << this->_name << "unable to repair hit points. No Energy points left" << std::endl;
 	}
 }
+
+int			ClapTrap::ft_get_attack_damage( void ) {
+	return (this->_attack_damage);
+}

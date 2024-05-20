@@ -32,7 +32,7 @@ FragTrap & FragTrap::operator=(FragTrap const & to_assign) {
 }
 
 void FragTrap::highFivesGuys(void) {
-	if ( this->_energy_p && this->_hit_p) {
+	if ( !this->_energy_p || !this->_hit_p) {
 		std::cout	<< "FragTrap " << this->_name << " can't give five:-(((";
 		if (!this->_hit_p)
 			std::cout << " No hit points left!" << std::endl;

@@ -1,7 +1,7 @@
 #include "incl/ScavTrap.hpp"
 
 ScavTrap::ScavTrap( std::string new_name ) {
-	std::cout << "ScavTrap default constructor called" << std::endl;
+	std::cout << "ScavTrap constructor called" << std::endl;
 	this->_name = new_name;
 	this-> _attack_damage = 20;
 	this->_energy_p = 50;

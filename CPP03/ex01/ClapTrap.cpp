@@ -1,7 +1,7 @@
 #include "incl/ClapTrap.hpp"
 
 ClapTrap::ClapTrap( std::string new_name ) : _name(new_name), _attack_damage(0) {
-	std::cout << "ClapTrap default constructor called" << std::endl;
+	std::cout << "ClapTrap constructor called" << std::endl;
 	this->_energy_p = 10;
 	this->_hit_p = 10;
 	return ; 
@@ -46,6 +46,8 @@ void 		ClapTrap::attack(const std::string& target) {
 }
 
 void ClapTrap::takeDamage(unsigned int amount) {
+	if (amount < 0)
+		amount = 0;
 	if (amount > this->_hit_p)
 		amount = _hit_p;
 	this->_hit_p -= amount;
@@ -67,4 +69,8 @@ void 		ClapTrap::beRepaired(unsigned int amount) {
 	} else {
 		std::cout	<< "ClapTrap " << this->_name << "unable to repair hit points. No Energy points left" << std::endl;
 	}
+}
+
+int			ClapTrap::ft_get_attack_damage( void ) {
+	return (this->_attack_damage);
 }

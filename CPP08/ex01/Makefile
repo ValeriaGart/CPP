@@ -1,6 +1,7 @@
-NAME = array
+NAME = span
 
-SRCS =	main.cpp	
+SRCS =	main.cpp	\
+		Span.cpp
 
 CC = c++
 

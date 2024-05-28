@@ -1,4 +1,4 @@
-NAME = array
+NAME = mutated_abomination
 
 SRCS =	main.cpp	
 

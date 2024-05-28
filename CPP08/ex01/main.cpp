@@ -11,5 +11,28 @@ int main()
 	sp.addNumber(11);
 	std::cout << sp.shortestSpan() << std::endl;
 	std::cout << sp.longestSpan() << std::endl;
+
+	std::vector<int> deq;
+	for (int i = 0; i < 10001; ++i) {
+		deq.push_back(rand());
+	}
+
+	try {
+		Span x(10000);
+		x.addMany(deq.begin(), deq.end());
+		std::cout << "Shortest span: " << x.shortestSpan() << "\n";
+		std::cout << "Longest span:  " << x.longestSpan() << "\n";
+	} catch (std::exception &e) {
+		std::cout << e.what() << "\n";
+	}
+
+	try {
+		Span x(1);
+		x.addNumber(1);
+		std::cout << "Shortest span: " << x.shortestSpan() << "\n";
+		std::cout << "Longest span:  " << x.longestSpan() << "\n";
+	} catch (std::exception &e) {
+		std::cout << e.what() << "\n";
+	}
 	return (0);
 }

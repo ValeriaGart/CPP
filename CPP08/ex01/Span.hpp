@@ -15,6 +15,12 @@ class Span {
 		Span& operator=(const Span& to_copy);
 		~Span( void );
 
+		void	addNumber(int num);
+		void	addMany(std::vector<int>::iterator begin, std::vector<int>::iterator end);
+		long	shortestSpan(void);
+		long	longestSpan(void) const;
+		void	putDeq(void);
+
 	private:
 		Span( void );
 		unsigned int _n;

@@ -1,4 +1,4 @@
-NAME = easy_find
+NAME = RPN
 
 SRCS =	main.cpp	
 

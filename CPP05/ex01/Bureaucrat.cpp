@@ -1,7 +1,11 @@
 #include "./incl/Bureaucrat.hpp"
 
 Bureaucrat::Bureaucrat( const std::string& name, int grade ) : _name(name), _grade(grade) {
-	return ; 
+	if ( grade <= 0 )
+		throw Bureaucrat::GradeTooHighException();
+	else if ( grade > 150 )
+		throw Bureaucrat::GradeTooLowException();
+	return ;
 }
 
 Bureaucrat::Bureaucrat( void ) : _name(NULL), _grade(-1) {

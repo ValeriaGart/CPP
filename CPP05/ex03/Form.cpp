@@ -27,6 +27,7 @@ Form::Form( void ) : _signed(0), _signGrade(1000), _executeGrade(1000){
 Form::Form( Form const & to_copy) : _name(to_copy.getName()), _signed(to_copy.getSigned()), _target(to_copy.getTarget()),
 									_signGrade(to_copy.getSignGrade()), _executeGrade(to_copy.getExecuteGrade()) {
 	std::cout << "Form copy constructor called" << std::endl;
+	*this = to_copy;
 }
 
 Form & Form::operator=(Form const & to_assign) {

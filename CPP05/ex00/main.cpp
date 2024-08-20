@@ -1,19 +1,23 @@
 #include "./incl/Bureaucrat.hpp"
 
 int     main( void ) {
-    Bureaucrat bur("Mike", 10);
+    std::cout << "test_00\n" << std::endl;
+    try {
+        Bureaucrat bur("Mike", 120);
 
-    /*try {
-        std::cout << bur << std::endl;
-        bur.incrementGrade();
-        std::cout << bur << std::endl;
-        bur.decrementGrade();
-        std::cout << bur << std::endl;
+        for (int i; i < 141; i++) {
+            bur.decrementGrade();
+            std::cout << bur << std::endl;
+        }
     }
     catch (std::exception & e) {
-        std::cout << e.what() << std::endl;
-    }*/
+        std::cerr << e.what() << std::endl;
+    }
+
+    std::cout << "\ntest_01\n" << std::endl;
     try {
+        Bureaucrat bur("Mike", 171);
+
         for (int i; i < 141; i++) {
             bur.decrementGrade();
             std::cout << bur << std::endl;

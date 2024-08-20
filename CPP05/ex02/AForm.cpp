@@ -27,6 +27,7 @@ AForm::AForm( void ) : _signed(0), _signGrade(1000), _executeGrade(1000){
 AForm::AForm( AForm const & to_copy) : _name(to_copy.getName()), _signed(to_copy.getSigned()), _target(to_copy.getTarget()),
 									_signGrade(to_copy.getSignGrade()), _executeGrade(to_copy.getExecuteGrade()) {
 	std::cout << "AForm copy constructor called" << std::endl;
+	*this = to_copy;
 }
 
 AForm & AForm::operator=(AForm const & to_assign) {

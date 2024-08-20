@@ -10,13 +10,12 @@ _signGrade(signGrade), _executeGrade(execGrade), _name(name) {
 	
 	std::cout << "Form constructor for |" << this->getName() << "| called" << std::endl;
 
+	this->_signed = false;
+
 	if (signGrade > 150 || execGrade > 150)
 		throw (Form::GradeTooLowException());
-
 	else if (signGrade < 1 || execGrade < 1)
 		throw (Form::GradeTooHighException());
-	
-	this->_signed = false;
 	return ;
 }
 
@@ -27,6 +26,7 @@ Form::Form( void ) : _signed(0), _signGrade(1000), _executeGrade(1000){
 Form::Form( Form const & to_copy) : _name(to_copy.getName()), _signed(to_copy.getSigned()),
 									_signGrade(to_copy.getSignGrade()), _executeGrade(to_copy.getExecuteGrade()) {
 	std::cout << "Form copy constructor for |" << this->getName() << "| called" << std::endl;
+	*this = to_copy;
 }
 
 Form & Form::operator=(Form const & to_assign) {

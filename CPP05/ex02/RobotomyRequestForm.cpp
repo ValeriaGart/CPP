@@ -31,14 +31,18 @@ RobotomyRequestForm& RobotomyRequestForm::operator=(const RobotomyRequestForm &t
 
 void RobotomyRequestForm::executeByForm(Bureaucrat const& bur) const
 {
+	std::srand(static_cast<unsigned int>(std::time(0)));
+	
+	int randome = std::rand() % 2;
+	
 	if (bur.getGrade() > this->getExecuteGrade())
-		throw bur::GradeTooLowException();
+		throw Bureaucrat::GradeTooLowException();
 	else if (this->getSigned() == false)
 		std::cerr	<< "RobotomyRequestForm couldn't be executed by "
 					<< bur.getName() << " because it was not signed" << std::endl;
 	else {
 		std::cout << "Some drilling noises... " << std::endl;
-		if (random() % 2 == 1)
+		if (randome == 1)
 			std::cout << "Target |" << this->getTarget() << "| is successfully robotomized :)" << std::endl;
 		else
 			std::cout << "Target |"<< this->getTarget() << "| failed to robotimize :(" << std::endl;

@@ -7,6 +7,8 @@
 
 Base *generate( void ) {
 
+	std::srand(static_cast<unsigned int>(std::time(0)));
+
     unsigned int random_num = std::rand() % 3;
 
     if (random_num == 0) {

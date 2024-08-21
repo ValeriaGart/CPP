@@ -4,6 +4,8 @@
 # include <iostream>
 # include <exception>
 # include <string>
+# include <ctime>
+# include <cstdlib>
 # include "Bureaucrat.hpp"
 
 class Bureaucrat;

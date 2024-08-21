@@ -26,7 +26,8 @@ Intern::~Intern( void ) {
 
 Intern::Intern(const Intern &to_copy) {
 	std::cout << "Intern copy constructor called" << std::endl;
-	*this = to_copy;
+    if (this != &to_copy)
+    	*this = to_copy;
 }
 
 Intern& Intern::operator=(const Intern &to_assign)

@@ -27,12 +27,17 @@ Form::Form( void ) : _signed(0), _signGrade(1000), _executeGrade(1000){
 Form::Form( Form const & to_copy) : _name(to_copy.getName()), _signed(to_copy.getSigned()), _target(to_copy.getTarget()),
 									_signGrade(to_copy.getSignGrade()), _executeGrade(to_copy.getExecuteGrade()) {
 	std::cout << "Form copy constructor called" << std::endl;
+	if (_signGrade > 150 || _executeGrade > 150)
+		throw (Form::GradeTooLowException());
+	else if (_signGrade < 1 || _executeGrade < 1)
+		throw (Form::GradeTooHighException());
 	*this = to_copy;
 }
 
 Form & Form::operator=(Form const & to_assign) {
 	std::cout << "Equality operator for |" << this->getName() << "| is called" << std::endl;
-	this->_signed = to_assign.getSigned();
+	if (this != &to_assign)
+		this->_signed = to_assign.getSigned();
 	return *this;
 }
 

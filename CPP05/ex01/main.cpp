@@ -3,6 +3,7 @@
 int     main( void ) {
     Bureaucrat bur("Mike", 10);
 
+    std::cout << bur << std::endl;
     try {
         Form form1("form1", 10, 10);
         form1.beSigned(bur);

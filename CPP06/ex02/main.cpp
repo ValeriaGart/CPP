@@ -39,7 +39,7 @@ void identify(Base& one) {
 	try {
 		(void)dynamic_cast<A&>(one);
 		std::cout << "casted ref A" << std::endl;
-	} catch (std::exception &) { std::cout << "Bad ref cast C!" << std::endl; }
+	} catch (std::exception &) { std::cout << "Bad ref cast A!" << std::endl; }
 	try {
 		(void)dynamic_cast<B&>(one);
 		std::cout << "casted ref B" << std::endl;

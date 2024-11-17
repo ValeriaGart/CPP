@@ -34,6 +34,7 @@ void	ft_try_convert(const std::string &lit) {
 		std::cout << "int: " << static_cast<int>(int_lit) << std::endl;
 	}
 
+	errno = 0;
 	float float_lit = std::strtof(lit.c_str(), NULL);
 	if (errno == ERANGE) {
 		std::cout << "float: impossible" << std::endl;
@@ -41,6 +42,7 @@ void	ft_try_convert(const std::string &lit) {
 		std::cout << std::fixed << std::setprecision(1) << "float: " << float_lit << "f" << std::endl;
 	}	
 	
+	errno = 0;
 	double double_lit = std::strtod(lit.c_str(), NULL);
 	if (errno == ERANGE) {
 		std::cout << "double: impossible" << std::endl;

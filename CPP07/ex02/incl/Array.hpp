@@ -33,7 +33,15 @@ Array<T>::~Array() {
 }
 
 template <typename T>
-Array<T>::Array(unsigned int n) : _size(n), _arr(new T[_size]()) {}
+Array<T>::Array(unsigned int n) {
+	this->_size = n;
+	this->_arr = new T[_size]();
+	if(!this->_arr)
+	{
+		this->_size = 0;
+		std::cerr << "Allocation has failed. Array set to null, size is 0." << std::endl;
+	}
+}
 
 template <typename T>
 Array<T>::Array(const Array& to_copy) : _arr(new T[to_copy._size]()), _size(to_copy._size) {

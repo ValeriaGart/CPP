@@ -10,18 +10,26 @@ Span::Span(const Span& to_copy) {
 	*this = to_copy;
 }
 
+unsigned int	Span::get_n( void ) const {
+	return (this->_n);
+}
+
+std::deque<int>	Span::get_vector(void) const {
+	return (this->_vector);
+}
+
 Span& Span::operator=(const Span& to_copy) {
 	if (this != &to_copy)
 	{
-		this->_n = to_copy._n;
-		this->_vector = to_copy._vector;
+		this->_n = to_copy.get_n();
+		this->_vector = to_copy.get_vector();
 	}
 	return (*this);
 }
 
 void Span::addNumber(int num) {
 	if (this->_vector.size() + 1 > this->_n)
-		throw std::out_of_range("Too many numbers");
+		throw SpanException("Too many numbers");
 	std::deque<int>::iterator it = std::upper_bound(this->_vector.begin(), this->_vector.end(), num);
 	if (it != this->_vector.end())
 		this->_vector.insert(it, num);

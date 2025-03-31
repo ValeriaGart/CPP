@@ -8,9 +8,16 @@ int main(int ac, char**av) {
 		return(1);
 	}
 
-	BitcoinExchange to_output(av[1]);
+	try {
 
-	to_output.outputValues();
+		BitcoinExchange to_output(av[1]);
+
+		to_output.outputValues();
+
+	} catch (const std::exception &e) {
+		std::cout << e.what() << std::endl;
+		return 1;
+	}
 
 	return (0);
 }

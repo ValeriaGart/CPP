@@ -23,16 +23,6 @@ class RPN
         	private:
         	    std::string _msg;
 				RPNError(){return;};
-				RPNError(RPNError const & to_copy) throw()
-				{
-					*this = to_copy;
-				}
-				RPNError & operator=(RPNError const & to_assign) throw()
-				{
-					if (this != &to_assign)
-						_msg = to_assign._msg;
-					return (*this);
-				}
 
         	public:
 				RPNError(std::string msg) throw()
@@ -44,6 +34,16 @@ class RPN
         	        return (_msg.c_str());
         	    }
         	    virtual ~RPNError() throw() {}
+				RPNError(RPNError const & to_copy) throw()
+				{
+					*this = to_copy;
+				}
+				RPNError & operator=(RPNError const & to_assign) throw()
+				{
+					if (this != &to_assign)
+						_msg = to_assign._msg;
+					return (*this);
+				}
     	};
 
 	private:

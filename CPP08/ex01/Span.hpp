@@ -22,21 +22,6 @@ class Span {
 		void	putDeq(void);
 		unsigned int	get_n(void)  const;
 		std::deque<int>	get_vector(void)  const;
-		class SpanException : public std::exception
-		{
-			private:
-				std::string _msg;
-			public:
-				SpanException(std::string msg) throw()
-				{
-					_msg = "Span parser error...: " + msg ;
-				}
-				virtual const char* what() const throw()
-				{
-					return (_msg.c_str());
-				}
-				virtual ~SpanException() throw() {}
-		};
 
 	private:
 		Span( void );

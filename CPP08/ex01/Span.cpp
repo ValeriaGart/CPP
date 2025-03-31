@@ -29,7 +29,7 @@ Span& Span::operator=(const Span& to_copy) {
 
 void Span::addNumber(int num) {
 	if (this->_vector.size() + 1 > this->_n)
-		throw SpanException("Too many numbers");
+		throw std::out_of_range("Too many numbers");
 	std::deque<int>::iterator it = std::upper_bound(this->_vector.begin(), this->_vector.end(), num);
 	if (it != this->_vector.end())
 		this->_vector.insert(it, num);

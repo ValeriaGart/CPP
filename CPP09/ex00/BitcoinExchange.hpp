@@ -21,6 +21,35 @@ class	BitcoinExchange {
 
 		std::string getInputfile(void) const ;
 		void outputValues (void);
+		std::map<std::string, double> getBitprices(void) const;
+
+		class BitcoinError : public std::exception
+        {
+        	private:
+        	    std::string _msg;
+				BitcoinError(){return;};
+
+        	public:
+			BitcoinError(std::string msg) throw()
+        	    {
+        	        _msg = "Error has occurred... " + msg;
+        	    }
+        	    virtual const char* what() const throw()
+        	    {
+        	        return (_msg.c_str());
+        	    }
+        	    virtual ~BitcoinError() throw() {}
+				BitcoinError(BitcoinError const & to_copy) throw()
+				{
+					*this = to_copy;
+				}
+				BitcoinError & operator=(BitcoinError const & to_assign) throw()
+				{
+					if (this != &to_assign)
+						_msg = to_assign._msg;
+					return (*this);
+				}
+    	};
 
 	private:
 		BitcoinExchange( void );

@@ -5,12 +5,17 @@ BitcoinExchange::BitcoinExchange( void ) {}
 BitcoinExchange::~BitcoinExchange( void ) {}
 
 BitcoinExchange::BitcoinExchange (BitcoinExchange const & to_copy) {
-	*this = to_copy;
+	if (this !=  &to_copy) {
+		*this = to_copy;
+		this->_InputFile =  to_copy.getInputfile();
+		this->_bitPrices = to_copy.getBitprices();
+	}
 }
 
 BitcoinExchange &	BitcoinExchange::operator=(BitcoinExchange const & to_assign) {
 	if (this != &to_assign) {
 		this->_InputFile = to_assign.getInputfile();
+		this->_bitPrices = to_assign.getBitprices();
 	}
 	return *this;
 }
@@ -19,8 +24,11 @@ std::string BitcoinExchange::getInputfile() const {
 	return (this->_InputFile);
 }
 
-BitcoinExchange::BitcoinExchange ( std::string InputF ) : _InputFile(InputF) {
+std::map<std::string, double> BitcoinExchange::getBitprices(void) const{
+	return (this->_bitPrices);
+}
 
+BitcoinExchange::BitcoinExchange ( std::string InputF ) : _InputFile(InputF) {
 
 	_bitPrices = this->loadBitcoinPrices("data.csv");
 
@@ -29,6 +37,10 @@ BitcoinExchange::BitcoinExchange ( std::string InputF ) : _InputFile(InputF) {
 
 void BitcoinExchange::outputValues() {
 	std::ifstream file(this->_InputFile);
+
+	if (!file) {
+		throw BitcoinError("InputFile can't be opened!");
+	}
 	std::string line, date, valueStr , pipe;
 	double value;
 
@@ -70,6 +82,11 @@ std::map<std::string, double> BitcoinExchange::loadBitcoinPrices(std::string Bas
 	
 	std::map<std::string, double> bitPrices;
 	std::ifstream file(BaseName);
+
+	if (!file) {
+		throw BitcoinError("Data.csv can't be opened!");
+	}
+
 	std::string new_line;
 	std::string date;
 	double price;

@@ -30,9 +30,16 @@ public:
 
 	class PmergeMeError : public std::exception
         {
-        private:
-            std::string _msg;
-			PmergeMeError(){return;};
+		public:
+            PmergeMeError(std::string msg) throw()
+            {
+                _msg = "Error has occurred... " + msg;
+            }
+            virtual const char* what() const throw()
+            {
+                return (_msg.c_str());
+            }
+            virtual ~PmergeMeError() throw() {}
 			PmergeMeError(PmergeMeError const & to_copy) throw()
 			{
 				*this = to_copy;
@@ -44,16 +51,11 @@ public:
 				return (*this);
 			}
 
-        public:
-            PmergeMeError(std::string msg) throw()
-            {
-                _msg = "Error has occurred... " + msg;
-            }
-            virtual const char* what() const throw()
-            {
-                return (_msg.c_str());
-            }
-            virtual ~PmergeMeError() throw() {}
+        private:
+            std::string _msg;
+			PmergeMeError(){return;};
+			
+
     };
 
 private:

@@ -9,8 +9,20 @@ int main()
 	sp.addNumber(17);
 	sp.addNumber(9);
 	sp.addNumber(11);
-	std::cout << sp.shortestSpan() << std::endl;
-	std::cout << sp.longestSpan() << std::endl;
+	std::cout << "sp shortest: " << sp.shortestSpan() << std::endl;
+	std::cout << "sp longest: " << sp.longestSpan() << std::endl;
+
+	std::cout << "\n-- Copy constructor --" << std::endl;
+
+	Span sp2(sp);
+	std::cout << "sp2 shortest: " << sp2.shortestSpan() << std::endl;
+	std::cout << "sp2 longest: " << sp2.longestSpan() << std::endl;
+
+	std::cout << "\n-- \"=\" operator --" << std::endl;
+
+	Span sp3 = sp2;
+	std::cout << "sp3 shortest: " << sp3.shortestSpan() << std::endl;
+	std::cout << "sp3 longest: " << sp3.longestSpan() << "\n" << std::endl;
 
 	std::vector<int> deq;
 	for (int i = 0; i < 10001; ++i) {

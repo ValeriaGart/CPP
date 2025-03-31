@@ -24,6 +24,7 @@ public:
 
 	iterator begin() { return (this->c.begin()); };
 	iterator end() { return (this->c.end()); };
+
 } ;
 
 #endif

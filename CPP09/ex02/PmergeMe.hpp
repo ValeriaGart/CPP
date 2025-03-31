@@ -32,6 +32,18 @@ public:
         {
         private:
             std::string _msg;
+			PmergeMeError(){return;};
+			PmergeMeError(PmergeMeError const & to_copy) throw()
+			{
+				*this = to_copy;
+			}
+			PmergeMeError & operator=(PmergeMeError const & to_assign) throw()
+			{
+				if (this != &to_assign)
+					_msg = to_assign._msg;
+				return (*this);
+			}
+
         public:
             PmergeMeError(std::string msg) throw()
             {

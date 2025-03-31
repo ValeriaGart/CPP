@@ -18,138 +18,458 @@ PmergeMe &	PmergeMe::operator=(PmergeMe const & to_assign) {
 	return *this;
 }
 
-void	PmergeMe::_fill_list(  ) {
-	std::stringstream str(this->_before);
-	std::string word;
-
-	while (str >> word) {
-		try {
-			double d = std::stod(word);
-			if (d >= 2147483648)
-				throw std::invalid_argument("Out of range");
-			this->_list.push_back((int)d);
-		} catch (std::invalid_argument & e) {
-			std::cerr << "Error" << std::endl;
-			exit(1);
-		}
-	}
-	return ;
-}
-
-void	PmergeMe::_fill_deque(  ) {
-	std::stringstream str(this->_before);
-	std::string word;
-
-	while (str >> word) {
-		try {
-			double d = std::stod(word);
-			if (d >= 2147483648)
-				throw std::invalid_argument("Out of range");
-			this->_deque.push_back((int)d);
-		} catch (std::invalid_argument & e) {
-			std::cerr << "Error" << std::endl;
-			exit(1);
-		}
-	}
-	return ;
-}
-
-PmergeMe::PmergeMe( int amount, char const *content[] ) {
-
-	this->_before = "";
-
-	for (int i = 1; i < amount; i++)
-	{
-		this->_before += content[i];
-		if (i < amount - 1)
-			this->_before += " ";
-	}
-
-	_fill_list();
-	_fill_deque();
-	this->_list = _list_sort( this->_list );
-	_deque_sort();
-
-    std::list<int>::iterator i = this->_list.begin()	;
-	while (i != this->_list.end()) {
-        std::cout << *i;
-        if (++i != this->_list.end())
-            std::cout << " ";
-    }
-    std::cout << std::endl;
-	return ;
-}
-
-std::list<std::pair<int, int>>	PmergeMe::_list_pairing( std::list<int> to_sort ) {
-	std::list<std::pair<int, int>> pairs;
-	std::list<std::pair<int, int>> ret;
-	auto i = to_sort.begin();
-	int one, two;
-
-	while (i != to_sort.end()) {
-		one = *i;
-		++i;
-		if (i != to_sort.end())
-			two = *i;
-		else
-			two = -42;
-		pairs.emplace_back(std::min(one, two), std::max(one, two));
-		if (i != to_sort.end())
-			++i;
-	}
-
-	auto i2 = pairs.begin();
-	while (i2 != pairs.end()) {
-		if (i2->second != -42)
-			ret.emplace_back(*i2);
-		std::cout << i2->first << " " << i2->second << std::endl;
-		++i2;
-	}
-
-    return (ret);
-}
-
-std::list<int>	PmergeMe::_list_sort( std::list<int>& to_sort ) {
-	std::list<std::pair<int, int>> pairs;
-	std::list<int> min, max;
-	std::list<int> ret;
-
-	for(auto itt = to_sort.begin(); itt != to_sort.end(); itt++)
-        std::cout << *itt << std::endl;
-	if (to_sort.size() == 0) {
-        std::cerr << "Usage: " << "./PmergeMe" << " [positive nums]" << std::endl;
-        exit(1) ;
-    }
-    if (to_sort.size() <= 1)
-	    return (to_sort);
-
-    pairs = _list_pairing( to_sort );
-
-    auto i = pairs.begin();
-	for (; i != pairs.end() ; ++i) {
-		if (i->first != -42)
-			min.push_back(i->first);
-		if (i->second != -42) {
-			max.push_back(i->second);
-		}
-	}
-	std::cout << "min" << std::endl;
-	std::list<int> sorted_mins = _list_sort(min);
-	std::cout << "max" << std::endl;
-	std::list<int> sorted_maxs = _list_sort(max);
-
-	ret.splice(ret.end(), sorted_mins);
-	ret.splice(ret.end(), sorted_maxs);
+long PmergeMe::_jacobsthal_number(long num) { 
+	long ret = round((pow(2, num + 1) + pow(-1, num)) / 3);
 
 	return (ret);
 }
 
-void	PmergeMe::_deque_sort( void ) {
-	if (this->_deque.size() == 0) {
-		std::cerr << "Usage: " << "./PmergeMe" << " [positive nums]" << std::endl;
-		exit(1) ;
+double PmergeMe::getListTime() const {
+	return this->_time_elapsed_list;
+}
+
+double PmergeMe::getDequeTime() const {
+	return this->_time_elapsed_deque;
+}
+
+void	PmergeMe::_fill_deque(  ) {
+	std::stringstream str(this->_original);
+	std::string word;
+
+	while (str >> word) {
+		double d = std::stod(word);
+		if (d >= 2147483648) {
+			throw PmergeMeError("A number out of range."); }
+		this->_deque.push_back((int)d);
 	}
-	if (this->_deque.size() == 1)
-		return ;
+}
+
+void	PmergeMe::_fill_list(  ) {
+	std::stringstream str(this->_original);
+	std::string word;
+
+	while (str >> word) {
+		double d = std::stod(word);
+		if (d >= 2147483648) {
+			throw PmergeMeError("A number out of range."); }
+		this->_list.push_back((int)d);
+	}
+}
+
+void PmergeMe::printList_n_Deque() {
+	std::list<int>::const_iterator itl = this->_list.begin();
+	std::deque<int>::const_iterator itd = this->_deque.begin();
+	for (; itl != this->_list.end() && itd != this->_deque.end(); ++itl, ++itd) {
+		if (*itl != *itd) {
+			throw PmergeMeError("List and Deque are not sorted correctly.");
+			return;
+		}
+		std::cout << *itl << " ";
+	}
+	std::cout << std::endl;
+}
+
+PmergeMe::PmergeMe( int amount, char const *content[] ) {
+
+	this->_original = "";
+
+	for (int i = 1; i < amount; i++)
+	{
+		this->_original += content[i];
+		if (i < amount - 1)
+			this->_original += " ";
+	}
+
+	_fill_list();
+	_fill_deque();
+
+	this->_pair_lvl = 1;
+	clock_t start_list = clock();
+	_list_sort( this->_list );
+	clock_t end_list = clock();
+	this->_time_elapsed_list = static_cast<double>(end_list - start_list) / CLOCKS_PER_SEC * 1000000;
+
+	this->_pair_lvl = 1;
+	clock_t start_deque = clock();
+	_deque_sort( this->_deque );
+	clock_t end_deque = clock();
+	this->_time_elapsed_deque = static_cast<double>(end_deque - start_deque) / CLOCKS_PER_SEC * 1000000;
+
 	return ;
 }
+
+void PmergeMe::splitChunks_deque(std::deque<int>& to_sort, std::deque<std::deque<int>>& main, std::deque<std::deque<int>>& pend, int num) {
+    std::deque<int>::iterator it = to_sort.begin();
+    int chunkCount = 0;
+    int i = 0;
+
+    num /= 2;
+    if (to_sort.size() == 3) {
+        for (; i < 3; ++i, ++it) {
+            std::deque<int> chunk;
+            chunk.push_back(*it);
+            if (i == 2) {
+                pend.push_back(chunk);
+            } else {
+                main.push_back(chunk);
+            }
+        }
+    }
+    if (num == 0) {
+        return;
+    }
+
+    while (it != to_sort.end()) {
+        std::deque<int> chunk;
+        i = 0;
+
+        for (; i < num && it != to_sort.end(); ++i, ++it) {
+            chunk.push_back(*it);
+        }
+
+        if (chunk.size() < num && chunk.size() != 0) {
+            _tmp_deque.push_back(chunk);
+        }
+        if (chunk.size() < num) break;
+
+        chunkCount++;
+
+        if (chunkCount == 1 || chunkCount == 2 || chunkCount % 2 == 0) {
+            main.push_back(chunk);
+        } else {
+            pend.push_back(chunk);
+        }
+    }
+
+    if (main.size() > (pend.size() + 2)) {
+        std::deque<int> last = main.back();
+        main.pop_back();
+        pend.push_back(last);
+    }
+    if (num == 1) {
+        std::deque<int> last = main.back();
+        main.pop_back();
+        std::deque<std::deque<int>>::iterator last_list_it = main.end();
+        --last_list_it;
+        if (last_list_it->back() > last.front()) {
+            pend.push_back(last);
+        } else {
+            main.push_back(last);
+        }
+    }
+}
+
+void printChunks_deque(const std::deque<std::deque<int>>& chunks, const std::string& name) {
+    std::cout << name << ":\n";
+    for (std::deque<std::deque<int>>::const_iterator chunkIt = chunks.begin(); chunkIt != chunks.end(); ++chunkIt) {
+        for (std::deque<int>::const_iterator numIt = chunkIt->begin(); numIt != chunkIt->end(); ++numIt) {
+            std::cout << *numIt << " ";
+        }
+        std::cout << "\n";
+    }
+}
+
+
+void PmergeMe::splitChunks(std::list<int>& to_sort, std::list<std::list<int> >& main, std::list<std::list<int> >& pend, int num) {
+    std::list<int>::iterator it = to_sort.begin();
+    int chunkCount = 0;
+	int i = 0;
+
+	num /= 2;
+	if (to_sort.size() == 3) {
+		for (; i < 3; ++i, ++it) {
+			std::list<int> chunk;
+			chunk.push_back(*it);
+			if (i == 2) {
+				pend.push_back(chunk);
+			} else {
+				main.push_back(chunk);
+			}
+		}
+	}
+	if (num == 0) {
+		return;}
+
+    while (it != to_sort.end()) {
+        std::list<int> chunk;
+		i = 0;
+
+        for (; i < num && it != to_sort.end(); ++i, ++it) {
+            chunk.push_back(*it);
+        }
+
+        if (chunk.size() < num && chunk.size() != 0) {
+			_tmp.push_back(chunk);
+		}
+		if (chunk.size() < num) break;
+
+        chunkCount++;
+
+        if (chunkCount == 1 || chunkCount == 2 || chunkCount % 2 == 0) {
+            main.push_back(chunk);
+        } else {
+            pend.push_back(chunk);
+        }
+    }
+
+	if (main.size() > (pend.size() + 2)) {
+		std::list<int> last = main.back();
+		main.pop_back();
+		pend.push_back(last);	
+	}
+	if(num == 1){
+		std::list<int> last = main.back();
+		main.pop_back();
+		std::list<std::list<int> >::iterator last_list_it = main.end();
+        --last_list_it;
+		if (last_list_it->back() > last.front()) {
+			pend.push_back(last); }
+		else {
+		main.push_back(last);}
+	}
+}
+
+void printChunks(const std::list<std::list<int> >& chunks, const std::string& name) {
+    std::cout << name << ":\n";
+    for (std::list<std::list<int> >::const_iterator chunkIt = chunks.begin(); chunkIt != chunks.end(); ++chunkIt) {
+        for (std::list<int>::const_iterator numIt = chunkIt->begin(); numIt != chunkIt->end(); ++numIt) {
+            std::cout << *numIt << " ";
+        }
+        std::cout << "\n";
+    }
+}
+
+void	PmergeMe::_list_sort( std::list<int>& to_sort ) {
+
+	int pair_units = to_sort.size() / this->_pair_lvl;
+    if (pair_units < 2) {
+        return;
+	}
+
+	int is_odd = 0; 
+	if (pair_units % 2 == 1)
+		is_odd = 1;
+	std::list<int>::iterator start = to_sort.begin();
+    std::list<int>::iterator last = this->_gimme_next_list(to_sort.begin(), (this->_pair_lvl * pair_units) - 1);
+    std::list<int>::iterator end = this->_gimme_next_list(last, -(is_odd * this->_pair_lvl));
+
+	int jump = 2 * this->_pair_lvl;
+
+    for (std::list<int>::iterator it = start; it != end; std::advance(it, jump)) {
+	    std::list<int>::iterator this_pair = this->_gimme_next_list(it, this->_pair_lvl - 1);
+    	std::list<int>::iterator next_pair = this->_gimme_next_list(it, this->_pair_lvl * 2 - 1);
+		if (*this_pair > *next_pair) {
+    		std::list<int>::iterator s = this->_gimme_next_list(this_pair, -(this->_pair_lvl) + 1);
+    		std::list<int>::iterator e = this->_gimme_next_list(s, this->_pair_lvl);
+    		if (s != to_sort.end() && e != to_sort.end()) {
+    			while (s != e)
+    			{
+    				std::list<int>::iterator next = this->_gimme_next_list(s, this->_pair_lvl);
+    				if (next == to_sort.end()) break;
+    				std::iter_swap(s, next);
+    				++s;
+    			}
+    		}
+    	}
+    	if (next_pair == end) {
+    		break; }
+    }
+
+
+	this->_pair_lvl *= 2;
+	_list_sort( to_sort );
+	this->_pair_lvl /= 2;
+
+	std::list<std::list<int> > main;
+    std::list<std::list<int> > pend;
+
+	splitChunks(to_sort, main, pend, this->_pair_lvl);
+
+	int prev = this->_jacobsthal_number(1);
+	int inserted_num = 0;
+	for (int iter = 2;; iter++) {
+		int curr = this->_jacobsthal_number(iter);
+		int diff = curr - prev;
+		int offset = 0;
+		if (diff > pend.size())
+        	break;
+		for (int i = 0; i < diff; i++) {
+			std::list<std::list<int> >::iterator pend_it = this->_gimme_next_list_of_list(pend.begin(), diff - 1 - i);
+			offset = 2 + diff + (inserted_num * 2); //- i;
+			if (offset > main.size()) {
+				break;
+			}
+			std::list<std::list<int> >::iterator pair = this->_gimme_next_list_of_list(main.begin(), (offset - 1));
+			std::list<std::list<int> >::iterator insertPos = main.begin();
+			while (insertPos != pair && insertPos->back() <= pend_it->back()) {
+				++insertPos;
+			}
+            std::list<std::list<int> >::iterator insert = main.insert(insertPos, *pend_it);
+            pend_it = pend.erase(pend_it);
+            std::advance(pend_it, -1);
+		}
+		if (offset > main.size()) {
+			break;
+		}
+		prev = curr;
+    	inserted_num += diff;
+	}
+	
+	for (ssize_t i = pend.size() - 1; i >= 0; i--)
+    {
+        std::list<std::list<int> >::iterator curr_pend = this->_gimme_next_list_of_list(pend.begin(), i);
+        std::list<std::list<int> >::iterator insertPos = main.begin();
+		while (insertPos != main.end() && insertPos->back() <= curr_pend->back()) {
+		    ++insertPos;
+		}
+		if (insertPos == main.end()) {
+			main.push_back(*curr_pend);
+		} else {
+        	main.insert(insertPos, *curr_pend);
+		}
+    }
+
+	std::list<int> flatList;
+    for (std::list<std::list<int> >::iterator outerIt = main.begin(); outerIt != main.end(); ++outerIt) {
+        for (std::list<int>::iterator innerIt = outerIt->begin(); innerIt != outerIt->end(); ++innerIt) {
+            flatList.push_back(*innerIt);
+        }
+    }
+	for (std::list<std::list<int> >::iterator outerIt = _tmp.begin(); outerIt != _tmp.end(); ++outerIt) {
+        for (std::list<int>::iterator innerIt = outerIt->begin(); innerIt != outerIt->end(); ++innerIt) {
+            flatList.push_back(*innerIt);
+        }
+    }
+
+	if (this->_pair_lvl != 1 || to_sort.size() == 3) {
+    	to_sort = flatList;
+	}
+	_tmp.clear();
+}
+
+void	PmergeMe::_deque_sort( std::deque<int>& to_sort ) {
+		int pair_units = to_sort.size() / this->_pair_lvl;
+		if (pair_units < 2) {
+			return;
+		}
+	
+		int is_odd = 0;
+		if (pair_units % 2 == 1)
+			is_odd = 1;
+		std::deque<int>::iterator start = to_sort.begin();
+		std::deque<int>::iterator last = this->_gimme_next_deque(to_sort.begin(), (this->_pair_lvl * pair_units) - 1);
+		std::deque<int>::iterator end = this->_gimme_next_deque(last, -(is_odd * this->_pair_lvl));
+	
+		int jump = 2 * this->_pair_lvl;
+	
+		for (std::deque<int>::iterator it = start; it != end; std::advance(it, jump)) {
+			std::deque<int>::iterator this_pair = this->_gimme_next_deque(it, this->_pair_lvl - 1);
+			std::deque<int>::iterator next_pair = this->_gimme_next_deque(it, this->_pair_lvl * 2 - 1);
+			if (*this_pair > *next_pair) {
+				std::deque<int>::iterator s = this->_gimme_next_deque(this_pair, -(this->_pair_lvl) + 1);
+				std::deque<int>::iterator e = this->_gimme_next_deque(s, this->_pair_lvl);
+				if (s != to_sort.end() && e != to_sort.end()) {
+					while (s != e) {
+						std::deque<int>::iterator next = this->_gimme_next_deque(s, this->_pair_lvl);
+						if (next == to_sort.end()) break;
+						std::iter_swap(s, next);
+						++s;
+					}
+				}
+			}
+			if (next_pair == end) {
+				break;
+			}
+		}
+	
+		this->_pair_lvl *= 2;
+		_deque_sort(to_sort);
+		this->_pair_lvl /= 2;
+	
+		std::deque<std::deque<int>> main;
+		std::deque<std::deque<int>> pend;
+	
+		splitChunks_deque(to_sort, main, pend, this->_pair_lvl);
+	
+		int prev = this->_jacobsthal_number(1);
+		int inserted_num = 0;
+		for (int iter = 2;; iter++) {
+			int curr = this->_jacobsthal_number(iter);
+			int diff = curr - prev;
+			int offset = 0;
+			if (diff > pend.size())
+				break;
+			for (int i = 0; i < diff; i++) {
+				std::deque<std::deque<int>>::iterator pend_it = this->_gimme_next_deque_of_deque(pend.begin(), diff - 1 - i);
+				offset = 2 + diff + (inserted_num * 2);
+				if (offset > main.size()) {
+					break;
+				}
+				std::deque<std::deque<int>>::iterator pair = this->_gimme_next_deque_of_deque(main.begin(), (offset - 1));
+				std::deque<std::deque<int>>::iterator insertPos = main.begin();
+				while (insertPos != pair && insertPos->back() <= pend_it->back()) {
+					++insertPos;
+				}
+				std::deque<std::deque<int>>::iterator insert = main.insert(insertPos, *pend_it);
+				pend_it = pend.erase(pend_it);
+				std::advance(pend_it, -1);
+			}
+			if (offset > main.size()) {
+				break;
+			}
+			prev = curr;
+			inserted_num += diff;
+		}
+	
+		for (ssize_t i = pend.size() - 1; i >= 0; i--) {
+			std::deque<std::deque<int>>::iterator curr_pend = this->_gimme_next_deque_of_deque(pend.begin(), i);
+			std::deque<std::deque<int>>::iterator insertPos = main.begin();
+			while (insertPos != main.end() && insertPos->back() <= curr_pend->back()) {
+				++insertPos;
+			}
+			if (insertPos == main.end()) {
+				main.push_back(*curr_pend);
+			} else {
+				main.insert(insertPos, *curr_pend);
+			}
+		}
+	
+		std::deque<int> flatList;
+		for (std::deque<std::deque<int>>::iterator outerIt = main.begin(); outerIt != main.end(); ++outerIt) {
+			for (std::deque<int>::iterator innerIt = outerIt->begin(); innerIt != outerIt->end(); ++innerIt) {
+				flatList.push_back(*innerIt);
+			}
+		}
+		for (std::deque<std::deque<int>>::iterator outerIt = _tmp_deque.begin(); outerIt != _tmp_deque.end(); ++outerIt) {
+			for (std::deque<int>::iterator innerIt = outerIt->begin(); innerIt != outerIt->end(); ++innerIt) {
+				flatList.push_back(*innerIt);
+			}
+		}
+	
+		if (this->_pair_lvl != 1 || to_sort.size() == 3) {
+			to_sort = flatList;
+		}
+		_tmp_deque.clear();
+	}
+	
+
+std::list<int>::iterator PmergeMe::_gimme_next_list(std::list<int>::iterator it, int num) {
+	std::advance(it, num);
+    return it;
+}
+
+std::list<std::list<int>>::iterator PmergeMe::_gimme_next_list_of_list(std::list<std::list<int>>::iterator it, int num) {
+	std::advance(it, num);
+    return it;
+}
+
+std::deque<std::deque<int>>::iterator PmergeMe::_gimme_next_deque_of_deque(std::deque<std::deque<int>>::iterator it, int num) {
+	std::advance(it, num);
+    return it;
+}
+
+std::deque<int>::iterator PmergeMe::_gimme_next_deque(std::deque<int>::iterator it, int num) {
+	std::advance(it, num);
+    return it;
+}
+

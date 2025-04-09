@@ -291,32 +291,36 @@ std::deque<std::deque<int> >::iterator ft_get_insert_pos_deque( std::deque<std::
 std::list<std::list<int> >::iterator ft_get_insert_pos(std::list<std::list<int> >& main, std::list<std::list<int> >::iterator pair, std::list<std::list<int> >::iterator pend) {
 	size_t len = 0;
 	std::list<std::list<int> >::iterator high = main.begin();
-	while (len < main.size()) {
-		if (high == pair) {
-			break;
-		}
-		++high;
-		++len;
-	}
-	std::list<std::list<int> >::iterator low;
-	low = main.begin();
-	std::list<std::list<int> >::iterator mid = main.begin();
-	std::advance(mid, len / 2);
-	while (low->back() <= high->back() && len != 0) {
-		mid = low;
-		std::advance(mid, len / 2);
-		if (mid->back() == pend->back()) {
-			return mid;
-		} else if (mid->back() > pend->back()) {
-			high = mid;
-			std::advance(high, -1);
-		} else {
-			std::advance(low, (len / 2) + 1);
-		}
-		len /= 2;
+
+	while (high != pair && high != main.end()) {
+	    ++high;
+	    ++len;
 	}
 
-	return (low);
+	size_t lowIndex = 0;
+	size_t highIndex = len;
+	size_t midIndex;
+
+	while (lowIndex < highIndex && len != 0) {
+	    midIndex = lowIndex + (highIndex - lowIndex) / 2;
+
+	    std::list<std::list<int> >::iterator mid = main.begin();
+	    std::advance(mid, midIndex);
+
+	    if (mid->back() == pend->back()) {
+	        return mid;
+	    } else if (mid->back() > pend->back()) {
+	        highIndex = midIndex;
+	    } else {
+	        lowIndex = midIndex + 1;
+	    }
+
+	    len = highIndex - lowIndex;
+	}
+
+	std::list<std::list<int> >::iterator result = main.begin();
+	std::advance(result, lowIndex);
+	return result;
 }
 
 void	PmergeMe::_list_sort( std::list<int>& to_sort ) {

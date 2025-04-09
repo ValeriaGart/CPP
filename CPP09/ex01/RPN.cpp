@@ -53,11 +53,17 @@ int RPN::_operate(int a, int b, const std::string &op) {
         if (_is_operator(token)) {
             if (this->_stack.size() < 2) {
                 throw RPNError("Not enough operands for operation: " + token);}
-            int b = this->_stack.back(); this->_stack.pop_back();
-            int a = this->_stack.back(); this->_stack.pop_back();
+            int b = this->_stack.back();
+            this->_stack.pop_back();
+            int a = this->_stack.back();
+            this->_stack.pop_back();
             this->_stack.push_back(_operate(a, b, token));
         } else {
             char *endptr;
+            if (token.length() == 0) {
+                continue;}
+            if (token.length() > 1 || token[0] < '0' || token[0] > '9') {
+                throw RPNError("Invalid token: " + token);}
             int num = std::strtol(token.c_str(), &endptr, 10);
             if (*endptr != '\0') {
                 throw RPNError("Invalid token: " + token);}

@@ -9,6 +9,7 @@
 #include <string>
 #include <iomanip>
 #include <stdexcept>
+#include <ctime>
 
 class	BitcoinExchange {
 
@@ -57,7 +58,11 @@ class	BitcoinExchange {
 		std::map<std::string, double> loadBitcoinPrices(std::string BaseName);
 
 		std::string _InputFile;
-		std::map<std::string, double> _bitPrices;
+		std::map<std::string, double>	_bitPrices;
+		void							ft_check_header(std::string line);
+		bool							ft_check_date(std::string date);
+		bool							ft_check_value(std::string valueStr);
+		std::string						trim_spaces(std::string str);
 
 };
 

@@ -146,7 +146,15 @@ void PmergeMe::splitChunks_deque(std::deque<int>& to_sort, std::deque<std::deque
         main.pop_back();
         pend.push_back(last);
     }
-    if (num == 1) {
+	if (main.size() > 1){
+		std::deque<int> last = main.back();
+		main.pop_back();
+		if (last.back() < main.back().back()) {
+			pend.push_back(last); }
+		else {
+		main.push_back(last);}
+	}
+    /*if (num == 1) {
         std::deque<int> last = main.back();
         main.pop_back();
         std::deque<std::deque<int>>::iterator last_list_it = main.end();
@@ -156,10 +164,10 @@ void PmergeMe::splitChunks_deque(std::deque<int>& to_sort, std::deque<std::deque
         } else {
             main.push_back(last);
         }
-    }
+    }*/
 }
 
-void printChunks_deque(const std::deque<std::deque<int>>& chunks, const std::string& name) {
+/*void printChunks_deque(const std::deque<std::deque<int>>& chunks, const std::string& name) {
     std::cout << name << ":\n";
     for (std::deque<std::deque<int>>::const_iterator chunkIt = chunks.begin(); chunkIt != chunks.end(); ++chunkIt) {
         for (std::deque<int>::const_iterator numIt = chunkIt->begin(); numIt != chunkIt->end(); ++numIt) {
@@ -167,7 +175,7 @@ void printChunks_deque(const std::deque<std::deque<int>>& chunks, const std::str
         }
         std::cout << "\n";
     }
-}
+}*/
 
 
 void PmergeMe::splitChunks(std::list<int>& to_sort, std::list<std::list<int> >& main, std::list<std::list<int> >& pend, int num) {
@@ -189,7 +197,6 @@ void PmergeMe::splitChunks(std::list<int>& to_sort, std::list<std::list<int> >& 
 	}
 	if (num == 0) {
 		return;}
-
     while (it != to_sort.end()) {
         std::list<int> chunk;
 		i = 0;
@@ -217,7 +224,15 @@ void PmergeMe::splitChunks(std::list<int>& to_sort, std::list<std::list<int> >& 
 		main.pop_back();
 		pend.push_back(last);	
 	}
-	if(num == 1){
+	if (main.size() > 1){
+		std::list<int> last = main.back();
+		main.pop_back();
+		if (last.back() < main.back().back()) {
+			pend.push_back(last); }
+		else {
+		main.push_back(last);}
+	}
+	/*if(num == 1){
 		std::list<int> last = main.back();
 		main.pop_back();
 		std::list<std::list<int> >::iterator last_list_it = main.end();
@@ -226,7 +241,7 @@ void PmergeMe::splitChunks(std::list<int>& to_sort, std::list<std::list<int> >& 
 			pend.push_back(last); }
 		else {
 		main.push_back(last);}
-	}
+	}*/
 }
 
 void printChunks(const std::list<std::list<int> >& chunks, const std::string& name) {
@@ -237,6 +252,71 @@ void printChunks(const std::list<std::list<int> >& chunks, const std::string& na
         }
         std::cout << "\n";
     }
+}
+
+std::deque<std::deque<int> >::iterator ft_get_insert_pos_deque( std::deque<std::deque<int> >& main, std::deque<std::deque<int> >::iterator pair, std::deque<std::deque<int> >::iterator pend)
+{
+    size_t len = 0;
+    std::deque<std::deque<int> >::iterator high = main.begin();
+    
+    while (high != pair && high != main.end()) {
+        ++high;
+        ++len;
+    }
+
+    size_t lowIndex = 0;
+    size_t highIndex = len;
+    size_t midIndex;
+
+    while (lowIndex < highIndex && len != 0) {
+        midIndex = lowIndex + (highIndex - lowIndex) / 2;
+        std::deque<std::deque<int> >::iterator low = main.begin() + lowIndex;
+        std::deque<std::deque<int> >::iterator mid = main.begin() + midIndex;
+        std::deque<std::deque<int> >::iterator highIt = main.begin() + highIndex;
+
+        if (mid->back() == pend->back()) {
+            return mid;
+        } else if (mid->back() > pend->back()) {
+            highIndex = midIndex;
+        } else {
+            lowIndex = midIndex + 1;
+        }
+
+        len = highIndex - lowIndex;
+    }
+
+    return main.begin() + lowIndex;
+}
+
+std::list<std::list<int> >::iterator ft_get_insert_pos(std::list<std::list<int> >& main, std::list<std::list<int> >::iterator pair, std::list<std::list<int> >::iterator pend) {
+	size_t len = 0;
+	std::list<std::list<int> >::iterator high = main.begin();
+	while (len < main.size()) {
+		if (high == pair) {
+			break;
+		}
+		++high;
+		++len;
+	}
+	std::list<std::list<int> >::iterator low;
+	low = main.begin();
+	std::list<std::list<int> >::iterator mid = main.begin();
+	std::advance(mid, len / 2);
+	while (low->back() <= high->back() && len != 0) {
+		mid = low;
+		std::advance(mid, len / 2);
+		if (mid->back() == pend->back()) {
+			return mid;
+		} else if (mid->back() > pend->back()) {
+			high = mid;
+			std::advance(high, -1);
+		} else {
+			std::advance(low, (len / 2) + 1);
+		}
+		len /= 2;
+	}
+
+	return (low);
 }
 
 void	PmergeMe::_list_sort( std::list<int>& to_sort ) {
@@ -295,15 +375,12 @@ void	PmergeMe::_list_sort( std::list<int>& to_sort ) {
         	break;
 		for (int i = 0; i < diff; i++) {
 			std::list<std::list<int> >::iterator pend_it = this->_gimme_next_list_of_list(pend.begin(), diff - 1 - i);
-			offset = 2 + diff + (inserted_num * 2); //- i;
+			offset = 2 + diff + (inserted_num * 2);
 			if (offset > main.size()) {
 				break;
 			}
 			std::list<std::list<int> >::iterator pair = this->_gimme_next_list_of_list(main.begin(), (offset - 1));
-			std::list<std::list<int> >::iterator insertPos = main.begin();
-			while (insertPos != pair && insertPos->back() <= pend_it->back()) {
-				++insertPos;
-			}
+			std::list<std::list<int> >::iterator insertPos = ft_get_insert_pos(main, pair, pend_it);
             std::list<std::list<int> >::iterator insert = main.insert(insertPos, *pend_it);
             pend_it = pend.erase(pend_it);
             std::advance(pend_it, -1);
@@ -318,10 +395,7 @@ void	PmergeMe::_list_sort( std::list<int>& to_sort ) {
 	for (ssize_t i = pend.size() - 1; i >= 0; i--)
     {
         std::list<std::list<int> >::iterator curr_pend = this->_gimme_next_list_of_list(pend.begin(), i);
-        std::list<std::list<int> >::iterator insertPos = main.begin();
-		while (insertPos != main.end() && insertPos->back() <= curr_pend->back()) {
-		    ++insertPos;
-		}
+        std::list<std::list<int> >::iterator insertPos = ft_get_insert_pos(main, main.end(), curr_pend);
 		if (insertPos == main.end()) {
 			main.push_back(*curr_pend);
 		} else {
@@ -406,10 +480,7 @@ void	PmergeMe::_deque_sort( std::deque<int>& to_sort ) {
 					break;
 				}
 				std::deque<std::deque<int>>::iterator pair = this->_gimme_next_deque_of_deque(main.begin(), (offset - 1));
-				std::deque<std::deque<int>>::iterator insertPos = main.begin();
-				while (insertPos != pair && insertPos->back() <= pend_it->back()) {
-					++insertPos;
-				}
+				std::deque<std::deque<int>>::iterator insertPos = ft_get_insert_pos_deque(main, pair, pend_it);
 				std::deque<std::deque<int>>::iterator insert = main.insert(insertPos, *pend_it);
 				pend_it = pend.erase(pend_it);
 				std::advance(pend_it, -1);
@@ -423,10 +494,8 @@ void	PmergeMe::_deque_sort( std::deque<int>& to_sort ) {
 	
 		for (ssize_t i = pend.size() - 1; i >= 0; i--) {
 			std::deque<std::deque<int>>::iterator curr_pend = this->_gimme_next_deque_of_deque(pend.begin(), i);
-			std::deque<std::deque<int>>::iterator insertPos = main.begin();
-			while (insertPos != main.end() && insertPos->back() <= curr_pend->back()) {
-				++insertPos;
-			}
+
+			std::deque<std::deque<int>>::iterator insertPos = ft_get_insert_pos_deque(main, main.end(), curr_pend);
 			if (insertPos == main.end()) {
 				main.push_back(*curr_pend);
 			} else {

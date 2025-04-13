@@ -154,17 +154,6 @@ void PmergeMe::splitChunks_deque(std::deque<int>& to_sort, std::deque<std::deque
 		else {
 		main.push_back(last);}
 	}
-    /*if (num == 1) {
-        std::deque<int> last = main.back();
-        main.pop_back();
-        std::deque<std::deque<int>>::iterator last_list_it = main.end();
-        --last_list_it;
-        if (last_list_it->back() > last.front()) {
-            pend.push_back(last);
-        } else {
-            main.push_back(last);
-        }
-    }*/
 }
 
 /*void printChunks_deque(const std::deque<std::deque<int>>& chunks, const std::string& name) {
@@ -232,19 +221,9 @@ void PmergeMe::splitChunks(std::list<int>& to_sort, std::list<std::list<int> >& 
 		else {
 		main.push_back(last);}
 	}
-	/*if(num == 1){
-		std::list<int> last = main.back();
-		main.pop_back();
-		std::list<std::list<int> >::iterator last_list_it = main.end();
-        --last_list_it;
-		if (last_list_it->back() > last.front()) {
-			pend.push_back(last); }
-		else {
-		main.push_back(last);}
-	}*/
 }
 
-void printChunks(const std::list<std::list<int> >& chunks, const std::string& name) {
+/*void printChunks(const std::list<std::list<int> >& chunks, const std::string& name) {
     std::cout << name << ":\n";
     for (std::list<std::list<int> >::const_iterator chunkIt = chunks.begin(); chunkIt != chunks.end(); ++chunkIt) {
         for (std::list<int>::const_iterator numIt = chunkIt->begin(); numIt != chunkIt->end(); ++numIt) {
@@ -252,7 +231,7 @@ void printChunks(const std::list<std::list<int> >& chunks, const std::string& na
         }
         std::cout << "\n";
     }
-}
+}*/
 
 std::deque<std::deque<int> >::iterator ft_get_insert_pos_deque( std::deque<std::deque<int> >& main, std::deque<std::deque<int> >::iterator pair, std::deque<std::deque<int> >::iterator pend)
 {
